@@ -41,6 +41,7 @@ const Filter = ({ handleFilterChange }) => {
     });
   };
 
+  
   const selectByPriceHandler = (selectedValue) => {
     setSortByPrice(selectedValue);
     handleFilterChange(selectedCategories, selectedValue);
