@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-const MEDIA_API = "http://localhost:8080/api/v1/media";
+const MEDIA_API = "http://localhost:3000/api/v1/media";
 
 const LectureTab = () => {
   const [lectureTitle, setLectureTitle] = useState("");
@@ -60,8 +60,8 @@ const LectureTab = () => {
         if (res.data.success) {
           console.log(res);
           setUploadVideoInfo({
-            videoUrl: res.data.data.url,
-            publicId: res.data.data.public_id,
+            videoUrl: res.data.url,
+            publicId: res.data.public_id,
           });
           setBtnDisable(false);
           toast.success(res.data.message);
@@ -116,7 +116,7 @@ const LectureTab = () => {
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
-          <Button disbaled={removeLoading} variant="destructive" onClick={removeLectureHandler}>
+          <Button disabled={removeLoading} variant="destructive" onClick={removeLectureHandler}>
             {
               removeLoading ? <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin"/>

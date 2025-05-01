@@ -24,6 +24,7 @@ import {
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
 import { ThemeProvider } from "./components/ThemeProvider";
 
+
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -34,7 +35,7 @@ const appRouter = createBrowserRouter([
         element: (
           <>
             <HeroSection />
-            <Courses />
+            <Courses/>
           </>
         ),
       },
@@ -93,10 +94,11 @@ const appRouter = createBrowserRouter([
       {
         path: "admin",
         element: (
-          <AdminRoute>
+          
             <Sidebar />
-          </AdminRoute>
+          
         ),
+        
         children: [
           {
             path: "dashboard",
@@ -137,5 +139,4 @@ function App() {
     </main>
   );
 }
-
 export default App;

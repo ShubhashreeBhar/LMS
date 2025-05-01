@@ -1,4 +1,4 @@
-import { Menu, School } from "lucide-react";
+import { LucideSchool2, Menu, School, School2Icon } from "lucide-react";
 import React, { useEffect } from "react";
 import {
   DropdownMenu,
@@ -47,7 +47,7 @@ const Navbar = () => {
       {/* Desktop */}
       <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
         <div className="flex items-center gap-2">
-          <School size={"30"} />
+          <LucideSchool2 size={"40"} />
           <Link to="/">
             <h1 className="hidden md:block font-extrabold text-2xl">
               E-Learning
@@ -82,12 +82,15 @@ const Navbar = () => {
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
-                {user?.role === "instructor" && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem><Link to="/admin/dashboard">Dashboard</Link></DropdownMenuItem>
+                {["admin", "instructor"].includes(user?.role) && (
+                <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                 <Link to="/admin/dashboard">Dashboard</Link>
+                </DropdownMenuItem>
                   </>
-                )}
+                  )}
+
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
@@ -137,13 +140,17 @@ const MobileNavbar = ({user}) => {
           <Link to="/profile">Edit Profile</Link>
           <p>Log out</p>
         </nav>
-        {user?.role === "instructor" && (
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button type="submit" onClick={()=> navigate("/admin/dashboard")}>Dashboard</Button>
-            </SheetClose>
-          </SheetFooter>
-        )}
+        {["admin", "instructor"].includes(user?.role) && (
+  <SheetFooter>
+    <SheetClose asChild>
+      <Button onClick={() => navigate("/admin/dashboard")}>
+        Dashboard
+      </Button>
+    </SheetClose>
+  </SheetFooter>
+)}
+
+
       </SheetContent>
     </Sheet>
   );

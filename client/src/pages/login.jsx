@@ -69,16 +69,24 @@ const Login = () => {
     if(registerIsSuccess && registerData){
       toast.success(registerData.message || "Signup successful.")
     }
-    if(registerError){
-      toast.error(registerError.data.message || "Signup Failed");
-    }
+    // if(registerError){
+    //   toast.error(registerError.data.message || "Signup Failed");
+    // }
     if(loginIsSuccess && loginData){
       toast.success(loginData.message || "Login successful.");
       navigate("/");
     }
-    if(loginError){ 
-      toast.error(loginError.data.message || "login Failed");
+    // if(loginError){ 
+    //   toast.error(loginError.data.message || "login Failed");
+    // }
+    if (registerError || loginError) {
+      const errorMessage =
+        registerError?.data?.message ||
+        loginError?.data?.message ||
+        "An unexpected error occurred.";
+      toast.error(errorMessage);
     }
+    
   }, [
     loginIsLoading,
     registerIsLoading,
@@ -111,7 +119,7 @@ const Login = () => {
                   name="name"
                   value={signupInput.name}
                   onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. patel"
+                  placeholder="Eg. Akash"
                   required="true"
                 />
               </div>
@@ -122,7 +130,7 @@ const Login = () => {
                   name="email"
                   value={signupInput.email}
                   onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. patel@gmail.com"
+                  placeholder="Eg. xyz@gmail.com"
                   required="true"
                 />
               </div>
@@ -171,7 +179,7 @@ const Login = () => {
                   name="email"
                   value={loginInput.email}
                   onChange={(e) => changeInputHandler(e, "login")}
-                  placeholder="Eg. patel@gmail.com"
+                  placeholder="Eg. xyz@gmail.com"
                   required="true"
                 />
               </div>
