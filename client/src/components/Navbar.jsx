@@ -117,6 +117,7 @@ export default Navbar;
 
 const MobileNavbar = ({user}) => {
   const navigate = useNavigate();
+ 
   
   return (
     <Sheet>

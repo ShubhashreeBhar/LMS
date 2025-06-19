@@ -222,52 +222,56 @@ export const getCourseLecture = async (req,res) => {
         })
     }
 }
+
 export const editLecture = async (req, res) => {
     try {
-      const { lectureTitle, videoInfo, isPreviewFree } = req.body;
-      const { courseId, lectureId } = req.params;
-  
-      // Validate videoInfo before using it
-      if (videoInfo && (!videoInfo.publicId || !videoInfo.videoUrl)) {
-        return res.status(400).json({
-          message: "Both publicId and videoUrl are required for the video.",
-        });
-      }
-  
-      const lecture = await Lecture.findById(lectureId);
-      if (!lecture) {
-        return res.status(404).json({ message: "Lecture not found!" });
-      }
-  
-      // Update lecture details
-      if (lectureTitle) lecture.lectureTitle = lectureTitle;
-      if (videoInfo) {
-        lecture.videoInfo = videoInfo;
-      }
-      lecture.isPreviewFree = isPreviewFree;
-  
-      await lecture.save();
-  
-      // Ensure the course has the lecture ID if it was not already added
-      const course = await Course.findById(courseId);
-      if (course && !course.lectures.includes(lecture._id)) {
-        course.lectures.push(lecture._id);
+        const { courseId, lectureId } = req.params;
+        const { lectureTitle, videoInfo, isPreviewFree } = req.body;
+
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ success: false, message: "Course not found" });
+        }
+        const isLectureInCourse = course.lectures.some(id => id.toString() === lectureId);
+        if (!isLectureInCourse) {
+            return res.status(404).json({ success: false, message: "Lecture not part of this course" });
+        }
+
+
+        const lecture =  await Lecture.findById(lectureId);
+        if (!lecture) {
+            return res.status(404).json({ success: false, message: "Lecture not found" });
+        }
+
+        if (videoInfo && lecture.videoInfo?.publicId) {
+            await deleteVideoFromCloudinary(lecture.videoInfo.publicId);
+        }
+
+
+        // Update lecture information
+        lecture.lectureTitle = lectureTitle || lecture.lectureTitle;
+        lecture.isPreviewFree = isPreviewFree ?? lecture.isPreviewFree;
+
+        if (videoInfo) {
+            lecture.videoInfo = {
+                videoUrl: videoInfo.videoUrl,
+                publicId: videoInfo.publicId
+            };
+        }
+
         await course.save();
-      }
-  
-      return res.status(200).json({
-        lecture,
-        message: "Lecture updated successfully.",
-      });
+
+        res.status(200).json({
+            success: true,
+            message: "Lecture updated successfully",
+            lecture
+        });
     } catch (error) {
-      console.error("Error during lecture update:", error);
-      return res.status(500).json({
-        message: "Failed to edit lectures",
-        error: error.message,  // Include error message for better debugging
-      });
+        console.error("Error during lecture update:", error);
+        res.status(500).json({ success: false, message: "Server error", error: error.message });
     }
-  };
-  
+};
+
 
 export const removeLecture = async (req,res) => {
     try {

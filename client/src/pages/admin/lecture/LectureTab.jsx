@@ -46,6 +46,7 @@ const LectureTab = () => {
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files[0];
+    
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -56,12 +57,12 @@ const LectureTab = () => {
             setUploadProgress(Math.round((loaded * 100) / total));
           },
         });
-
+        console.log("Upload response:", res.data);
         if (res.data.success) {
           console.log(res);
           setUploadVideoInfo({
-            videoUrl: res.data.url,
-            publicId: res.data.public_id,
+            videoUrl: res.data.data.videoUrl,
+            publicId: res.data.data.publicId,
           });
           setBtnDisable(false);
           toast.success(res.data.message);
@@ -76,8 +77,12 @@ const LectureTab = () => {
   };
 
   const editLectureHandler = async () => {
-    console.log({ lectureTitle, uploadVideInfo, isFree, courseId, lectureId });
-
+   // console.log({ lectureTitle, uploadVideInfo, isFree, courseId, lectureId });
+    if (!uploadVideInfo?.videoUrl || !uploadVideInfo?.publicId) {
+      toast.error("Please upload a video before saving.");
+      return;
+    }
+    
     await edtiLecture({
       lectureTitle,
       videoInfo:uploadVideInfo,
